@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -36,9 +37,6 @@ public class ExerciseLambda {
 	@Test
 	public void printAllWords() {
 		listOfWords.stream().forEach(s -> System.out.println(s));
-		System.out.println("-------");
-		listOfWords.forEach(System.out::println);
-		// fail();
 	}
 
 	/*
@@ -47,24 +45,28 @@ public class ExerciseLambda {
 	 */
 	@Test
 	public void stringOfFirstLetterFromEveryWord() {
-
-		// TODO assertEquals("epicscbsbaaloietmloi", result);
-		fail();
+		
+		Function<String, String> firstChar = word -> {
+			return word.substring(0,1);
+		};
+		
+		String string = "";
+		for (String item : listOfWords) {
+			string = string.concat(firstChar.apply(item));
+		}	
+		
+		assertEquals("epicscbsbaaloietmloi", string);
 	}
 
 	// Exercise 2: Convert all words in wordList to upper case
 	@Test
 	public void makeUpperCase() {
 
-		listOfWords.stream().map(word -> word.toUpperCase()).forEach(word -> System.out.print(word + " "));
-
 		List<String> myList = listOfWords.stream().map(word -> word.toUpperCase()).collect(Collectors.toList());
 
 		assertEquals(Arrays.asList("EVERY", "PROBLEM", "IN", "COMPUTER", "SCIENCE", "CAN", "BE", "SOLVED", "BY",
 				"ADDING", "ANOTHER", "LEVEL", "OF", "INDIRECTION", "EXCEPT", "TOO", "MANY", "LEVELS", "OF",
 				"INDIRECTION"), myList);
-		//fail();
-
 	}
 
 	/*
@@ -72,19 +74,20 @@ public class ExerciseLambda {
 	 */
 	@Test
 	public void findEvenLengthWords() {
-		// TODO assertEquals(Arrays.asList("in", "computer", "be", "solved", "by",
-		// "adding", "of", "except", "many", "levels", "of"), output);
-		
-		Predicate<String> evenLengthWord = word -> {
-			return (word.length() % 2) == 0;
+	
+		// Create instance of Predicate named evenLengthWords
+		Predicate<String> evenLengthWords = word -> {
+			return (word.length() % 2) == 0; 
 			};
 			
-			List<String> output = listOfWords.stream().filter(evenLengthWord).collect(Collectors.toList());
+			List<String> output = listOfWords.stream().filter(evenLengthWords).collect(Collectors.toList());
 			
-			output.forEach(System.out::println);
-			System.out.println(evenLengthWord.test("kalle"));
-		
-		//fail();
+			assertEquals(Arrays.asList("in", "computer", "be", "solved", "by",
+					"adding", "of", "except", "many", "levels", "of"), output);
+		 
+			// Method test in  built in Interface of type predicate is used to test if 
+			// my name Nils consists of an even number of characters.
+			System.out.println(evenLengthWords.test("Nils"));
 	}
 
 	/*
@@ -92,8 +95,10 @@ public class ExerciseLambda {
 	 */
 	@Test
 	public void countNumberOfWords() {
-		// TODO assertEquals(20, count);
-		fail();
+		
+		int count = listOfWords.size();
+		
+		assertEquals(20, count);
 	}
 
 	/*
@@ -101,8 +106,16 @@ public class ExerciseLambda {
 	 */
 	@Test
 	public void countNumberOfCharactersInWords() {
-		// TODO assertEquals(105, count);
-		fail();
+		
+		Function<String, Integer> noChars = word -> {
+			return word.length();
+		};
+		
+		int countChars = 0;
+		for (String item : listOfWords) {
+			countChars = countChars + noChars.apply(item);
+		}	
+		assertEquals(105, countChars);
 	}
 
 	/*
