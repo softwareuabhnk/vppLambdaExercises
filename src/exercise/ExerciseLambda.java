@@ -6,10 +6,15 @@ import static org.junit.Assert.fail;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.TreeMap;
 import java.util.function.Function;
+import java.util.function.IntPredicate;
 import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.junit.Test;
 import org.omg.Messaging.SyncScopeHelper;
@@ -111,11 +116,18 @@ public class ExerciseLambda {
 			return word.length();
 		};
 		
+		ToIntFunction<String> chars = word -> {
+			return word.length();
+		};
+		
 		int countChars = 0;
 		for (String item : listOfWords) {
 			countChars = countChars + noChars.apply(item);
 		}	
-		assertEquals(105, countChars);
+			
+		int noOfChars = listOfWords.stream().mapToInt(chars).sum();
+		
+		assertEquals(105, noOfChars);
 	}
 
 	/*
@@ -123,11 +135,21 @@ public class ExerciseLambda {
 	 */
 	@Test
 	public void findFirstSquareThatIsDivisibleBy5() {
-		// HINT: IntStream.range(1, 100) creates a stream 1, 2, ... 99
-		// final int first = 0; // TODO
-
-		// TODO assertEquals(25, first);
-		fail();
+		
+			IntPredicate firstSquare = number -> {
+			return (Math.sqrt(number)) % 5 == 0; 
+			};
+		
+				
+			try {
+				final int first = IntStream.range(1, 100).filter(firstSquare).findFirst().getAsInt();
+		
+				assertEquals(25, first);
+			}
+			catch ( NoSuchElementException e) {
+				System.out.println("Exception: NoSuchElementException");
+		 
+			} 
 	}
 
 	/*
@@ -137,11 +159,13 @@ public class ExerciseLambda {
 	 */
 	@Test
 	public void joinChosenStringsAndSeparateByHyphen() {
+		
 		List<String> list = Arrays.asList("The", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog");
 
-		String merged;
-		// TODO assertEquals("quick-brown-fox", merged);
-		fail();
+		String merged = list.stream().skip(1).limit(3).collect(Collectors.joining("-"));
+		
+		assertEquals("quick-brown-fox", merged);
+		
 	}
 
 	/*
@@ -151,12 +175,21 @@ public class ExerciseLambda {
 	@Test
 	public void mapTheKeyValuePairsToString() {
 		Map<String, Integer> map = new TreeMap<>();
+		
 		map.put("c", 3);
 		map.put("b", 2);
 		map.put("a", 1);
-
-		// TODO assertEquals("a1b2c3", sb.toString());
-		fail();
+	
+		
+		StringBuilder sb = new StringBuilder();
+		
+		for (Map.Entry<String, Integer> entry : map.entrySet())
+		{
+			sb.append(entry.getKey());
+		    sb.append(entry.getValue());    
+		}
+		
+		assertEquals("a1b2c3", sb.toString());
 	}
 
 	/**
