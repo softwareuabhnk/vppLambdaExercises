@@ -198,7 +198,33 @@ public class ExerciseLambda {
 	@Test
 	public void printNumbersFromNewThread() {
 		List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-		// TODO Thread t;
-		fail();
+		
+		class printNumbersFromListTask implements Runnable {
+
+			@Override
+			public void run() {
+			
+				
+				
+				list.forEach(System.out::println);
+				
+				System.out.println("Thread " + Thread.currentThread().getName() + " has finished");
+
+			}
+			
+		}
+		
+		Thread printNumbersFromListTask = new Thread(new printNumbersFromListTask());
+		printNumbersFromListTask.start();
+		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+		System.out.println("Thread " + Thread.currentThread().getName() + " has finished");
+		
 	}
 }
